@@ -17,16 +17,19 @@ integer i;
 always @(clk, rst) begin
 	if(rst) begin
 		for(i=0; i<7; i=i+1) begin
-			mem[i] = 0;
+			mem[i] = i;
 		end
-		mem[7]=16'hfffe;
+		mem[7]=16'h0000;
 	end
 	else begin
 		if(clk) begin
-			if(!rst) begin
 				if(pc_inc) begin
 					mem[7] = mem[7] + 16'h0002	;
 				end
+		end
+		else begin
+			if(w_en) begin
+				mem[write_add]<=write_data;
 			end
 		end
 	end

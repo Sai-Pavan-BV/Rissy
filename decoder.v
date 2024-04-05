@@ -1,10 +1,12 @@
-module decoder(clk,inst);
+module decoder(clk,inst,bra_c,w_en,load_store,pc_inc,
+					RA_add,RB_add,alu_op,write_add,
+					immediate);
 
 input wire clk;
 input wire[15:0] inst;
 
-output reg bra_c,w_en,load_store;										// jump and conditional bra,write enable
-output reg[2:0] RA_add,RB_add,alu_op;					//alu_op 3'b0xx arthematic
+output reg bra_c,w_en,load_store,pc_inc;										// jump and conditional bra,write enable
+output reg[2:0] RA_add,RB_add,alu_op,write_add;					//alu_op 3'b0xx arthematic
 																	//			3'b1xx memory
 output reg[15:0] immediate;
 
@@ -26,6 +28,7 @@ always @* begin
 					w_en<=1;
 					immediate<=16'hxxxx;
 					load_store<=1'bx;
+					pc_inc<=1;
 					end
 			NDU: begin
 					alu_op<=3'b001;
@@ -36,6 +39,7 @@ always @* begin
 					w_en<=1;
 					immediate<=16'hxxxx;
 					load_store<=1'bx;
+					pc_inc<=1;
 					end
 			LW: begin
 					alu_op<=3'b111;
@@ -46,16 +50,18 @@ always @* begin
 					w_en<=1;
 					immediate<={10'h000,inst[5:0]};
 					load_store<=1'b1;
+					pc_inc<=1;
 					end
 			SW: begin
 					alu_op<=3'b111;
 					RA_add<=inst[11:9];
 					RB_add<=inst[8:6];
-					write_add<=inst[11:9];
+					write_add<=3'hx;
 					bra_c<=0;
 					w_en<=0;
 					immediate<={10'h000,inst[5:0]};
 					load_store<=1'b0;
+					pc_inc<=1;
 					end
 			BEQ: begin
 					alu_op<=3'b010;
@@ -66,7 +72,9 @@ always @* begin
 					w_en<=0;
 					immediate<={10'h000,inst[5:0]};
 					load_store<=1'b0;
+					pc_inc<=1;
 					end
+					
 			JAL: begin
 					alu_op<=3'b000;
 					RA_add<=inst[11:9];
@@ -76,10 +84,9 @@ always @* begin
 					w_en<=1;
 					immediate<={10'h000,inst[5:0]};
 					load_store<=1'b0;
+					pc_inc<=1;
 					end
-//	default: begin
-//	`			
-//				end
+					
 	endcase
 	end
 end
