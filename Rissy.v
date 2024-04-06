@@ -78,7 +78,7 @@ clk=0;
 rst=1;
 #2
 rst=0;
-{prog_mem[1],prog_mem[0]} = 16'h0ba0;
+{prog_mem[1],prog_mem[0]} = 16'h0ba0;								//never do a branch instruction as 1st instruction
 {prog_mem[3],prog_mem[2]} = 16'h8204;
 {prog_mem[5],prog_mem[4]} = 16'h44c5;
 {prog_mem[7],prog_mem[6]} = 16'h0220;
